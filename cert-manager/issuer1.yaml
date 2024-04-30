@@ -1,0 +1,31 @@
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"cert-manager.io/v1","kind":"Issuer","metadata":{"annotations":{},"name":"ms-issuer","namespace":"default"},"spec":{"vault":{"auth":{"kubernetes":{"mountPath":"/v1/auth/kubernetes","role":"cert-issuer","secretRef":{"key":"token","name":"cert-issuer-token-44bg2"}}},"path":"vault_int/sign/ec2.internal","server":"http://10.0.8.38:8200"}}}
+  creationTimestamp: "2023-08-01T07:26:25Z"
+  generation: 1
+  name: ms-issuer
+  namespace: default
+  resourceVersion: "44567457"
+  uid: bad96917-6df5-440f-96ad-fc643352df68
+spec:
+  vault:
+    auth:
+      kubernetes:
+        mountPath: /v1/auth/kubernetes
+        role: cert-issuer
+        secretRef:
+          key: token
+          name: cert-issuer-token-44bg2
+    path: vault_int/sign/ec2.internal
+    server: http://10.0.8.38:8200
+status:
+  conditions:
+  - lastTransitionTime: "2023-11-13T07:59:15Z"
+    message: Vault verified
+    observedGeneration: 1
+    reason: VaultVerified
+    status: "True"
+    type: Ready

@@ -1,0 +1,40 @@
+  - name: getting certificates info
+    community.crypto.x509_certificate_info:
+      path: "{{ cert }}"
+      valid_at:
+        point_1: "+3m"
+        # point_2: "+3s"
+    register: result
+    
+  - name: Validate that certificate is valid 
+    assert:
+      that:
+        - result.valid_at.point_1      
+        # - not result.valid_at.point_2  
+
+      success_msg: "certificate is validd"
+      fail_msg: "certificate is not valid"
+    ignore_errors: true
+    register: assert_result
+
+  - name: issue cert
+    uri:
+      url: "{{ url }}"
+      method: POST
+      return_content: true
+      headers:
+        X-Vault-Token: "{{ login_data.login.auth.client_token }}"
+      body:  "{{ common_name }}"
+      
+    register: cert_data
+    when: assert_result is failed
+
+  - name: Print output to file
+    copy:
+        content: "{{item.src}}"
+        dest: "{{item.dest}}"
+    with_items:
+    - { src: "{{ cert_data.json.data.private_key }}" , dest: "{{ private_key }}" }
+    - { src: "{{ cert_data.json.data.issuing_ca }}" , dest: "{{ issuer_ca }}" }
+    - { src: "{{ cert_data.json.data.certificate }}" , dest: "{{ cert }}" }
+    when: assert_result is failed

@@ -1,0 +1,16 @@
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: ho-issuer 
+  namespace: default
+spec:
+  vault:
+    server: http://10.0.8.207:8200
+    path: pki_ho_int/sign/handover
+    auth:
+      kubernetes:
+        mountPath: /v1/auth/kubernetes
+        role: cert-issuer
+        secretRef:
+          name: cert-issuer-ho-token-9k2mt
+          key: token

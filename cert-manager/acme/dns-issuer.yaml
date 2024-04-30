@@ -1,0 +1,16 @@
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: dns-issuer-ho
+spec:
+  acme:
+    email: user@example.com
+    server: http://10.0.8.207:8200/v1/pki_int/acme/directory 
+    privateKeySecretRef:
+      name: dns-issuer-account-key-ho
+    solvers:
+    - dns01:
+        route53:
+          region: eu-central-a
+          hostedZoneID: Z03090142OSYJA5TZOTQU
+      

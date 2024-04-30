@@ -1,0 +1,5 @@
+common_name: "common_name=ip-10-0-8-209.eu-central-1.compute.internal"
+private_key: "/home/ec2-user/certificates/private-key.pem"
+cert: "/home/ec2-user/certificates/cert.crt"
+issuer_ca: "/home/ec2-user/certificates/issuing_ca.crt"
+url: http://10.0.8.38:8200/v1/vault_int/issue/ec2.internal

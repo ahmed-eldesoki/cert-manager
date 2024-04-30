@@ -1,0 +1,23 @@
+apiVersion: v1
+automountServiceAccountToken: true
+kind: ServiceAccount
+metadata:
+  annotations:
+    eks.amazonaws.com/role-arn: arn:aws:iam::221133053333:role/cert_manager_DNS_challenge
+    meta.helm.sh/release-name: cert-manager
+    meta.helm.sh/release-namespace: cert-manager
+  creationTimestamp: "2024-02-15T12:09:10Z"
+  labels:
+    app: cert-manager
+    app.kubernetes.io/component: controller
+    app.kubernetes.io/instance: cert-manager
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: cert-manager
+    app.kubernetes.io/version: v1.14.2
+    helm.sh/chart: cert-manager-v1.14.2
+  name: cert-manager
+  namespace: cert-manager
+  resourceVersion: "74768335"
+  uid: 47f73e2f-d7b7-4881-8162-4e10227d1b3a
+secrets:
+- name: cert-manager-token-45hn8

@@ -1,0 +1,16 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: test-acme-dns-ho-2
+  namespace: default
+spec:
+  secretName: test-acme-dns-ho-2
+  subject:
+    organizations:
+      - vodafone
+  commonName: test.acme.com
+  dnsNames:
+    - test.acme.com
+  issuerRef:
+    name: dns-issuer-ho
+    kind: ClusterIssuer

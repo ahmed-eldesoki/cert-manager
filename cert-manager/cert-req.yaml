@@ -1,0 +1,13 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: ho-certificate
+  namespace: default
+spec:
+  commonName: ho.com
+  secretName: ho-tls
+  dnsNames:
+  - ho.com
+  issuerRef:
+    name: ho-issuer
+    kind: Issuer

@@ -1,0 +1,130 @@
+- name: distribute cert
+  hosts: all
+  become: true
+  gather_facts: no
+  vars_files:
+    - /home/ubuntu/ansible/vars/vars.yaml
+  
+  tasks:
+  - name: Login and use the resulting token
+    community.hashi_vault.vault_login:
+        url: http://10.0.8.38:8200
+        auth_method: approle
+        role_id: "{{ role_id }}"
+        secret_id: "{{ secret_id }}"
+    delegate_to: localhost    
+    register: login_data
+    
+  - name: check node-1
+    include_role:
+     name: node-1
+    when: inventory_hostname in groups['node-1']
+    
+  - name: check node-2
+    include_role:
+     name: node-2
+    when: inventory_hostname in groups['node-2']
+
+
+
+
+
+
+
+
+
+
+
+  #  - name: check
+  #    include_role:
+  #      name: node-1
+  #    register: role_output
+  #    delegate_to: "{{ groups['node-1'][0] }}"
+
+  # - name: Get information on generated certificate
+  #   community.crypto.x509_certificate_info:
+  #     path: /home/ubuntu/ansible/cert.crt
+  #     valid_at:
+  #       point_1: "+3m"
+  #       # point_2: "+3s"
+  #   register: result
+
+  # - name: Validate that certificate is valid tomorrow, but not in three weeks
+  #   ansible.builtin.assert:
+  #     that:
+  #       - result.valid_at.point_1      # valid in one day
+  #       # - not result.valid_at.point_2  # not valid in three weeks
+
+  #     success_msg: "Assertion passed"
+  #     fail_msg: "Assertion failed here"
+  #   ignore_errors: true
+  #   register: assert_result
+
+
+  # - name: Login and use the resulting token
+  #   community.hashi_vault.vault_login:
+  #       url: http://10.0.8.38:8200
+  #       auth_method: approle
+  #       role_id: "41162a43-76d2-dde7-0025-c1d5dda3498f"
+  #       secret_id: "4b392153-66b2-dd24-3029-99daa4f9bca3"
+  #   register: login_data
+  #   delegate_to: localhost
+  #   when: assert_result is failed
+
+  # - name: issue cert
+  #   uri:
+  #     url: http://10.0.8.38:8200/v1/vault_int/issue/ec2.internal
+  #     method: POST
+  #     return_content: true
+  #     headers:
+  #       X-Vault-Token: "{{ login_data.login.auth.client_token }}"
+  #     body:  "common_name=ip-10-0-8-207.eu-central-1.compute.internal"
+      
+    # with_items:
+    # - { src: "ip-10-0-8-207.eu-central-1.compute.internal" }
+    # - { src: "ip-10-0-8-208.eu-central-1.compute.internal" }
+    # register: cert_data
+    # delegate_to: localhost
+    # when: assert_result is failed
+
+  # - name: check
+  #   include_role:
+  #       name: node-1
+  #   register: role_output
+
+  # - set_fact:
+  #    var_role1: "{{ role_output.stdout }}"
+
+  # - name: Task 1
+  #   debug:
+  #     var: var_role1
+
+
+  # roles:
+  #  - deploy
+    # - node-2.yaml
+  #  - name: Display generated certificate
+  #    debug:
+  #     msg: "{{ cert_data.results[0].json.data.ca_chain  }}"
+     
+  # - name: Print output to file
+  #   copy:
+  #     content: "{{item.src}}"
+  #     dest: "{{item.dest}}"
+  #   with_items:
+  #   - { src: "{{ cert_data.json.data.private_key }}" , dest: /home/ubuntu/ansible/private-key.pem }
+  #   - { src: "{{ cert_data.json.data.issuing_ca }}" , dest: /home/ubuntu/ansible/issuing_ca.crt }
+  #   - { src: "{{ cert_data.json.data.certificate }}" , dest: /home/ubuntu/ansible/cert.crt }
+  #   delegate_to: localhost
+  #   when: assert_result is failed
+
+  # - name: Print output to file
+  #   copy:
+  #     content: "{{item.src}}"
+  #     dest: "{{item.dest}}"
+  #   with_items:
+  #   - { src: "{{ cert_data.results[1].json.data.private_key }}" , dest: /home/ec2-user/cert/private-key.pem }
+  #   - { src: "{{ cert_data.results[1].json.data.issuing_ca }}" , dest: /home/ec2-user/cert/issuing_ca.crt }
+  #   - { src: "{{ cert_data.results[1].json.data.certificate }}" , dest: /home/ec2-user/cert/cert.crt }
+  #   delegate_to: "{{ groups['node-1'][0] }}"
+  #   when: assert_result is failed
